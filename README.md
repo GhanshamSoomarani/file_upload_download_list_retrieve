@@ -1,61 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <a href="https://laravel.com" target="_blank">
+    <img src="https://laravel.com/img/logomark.min.svg" width="100" alt="Laravel Logo">
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://postman.com" target="_blank">
+    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/postman-icon.svg" width="60" alt="Postman Logo">
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://en.wikipedia.org/wiki/File_format" target="_blank">
+    <img src="https://uxwing.com/wp-content/themes/uxwing/download/file-and-folder/file-icon.svg" width="60" alt="File Upload Logo">
+  </a>
 </p>
 
-## About Laravel
+<h1 align="center">📌 Laravel Build a File Upload Endpoint API</h1>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  A RESTful API built with Laravel for managing tasks, including image/file uploads. Tested using Postman and powered by MySQL.
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📋 Table of Contents
 
-## Learning Laravel
+- [Step 1: Install and Create Laravel Application](#step-1-install-and-create-laravel-application)
+- [Step 2: Database Configuration using `.env` File](#step-2-database-configuration-using-env-file)
+- [Step 3: Make Model and Migration File](#step-3-make-model-and-migration-file)
+- [Step 4: Make Controller](#step-4-make-controller)
+- [Step 5: Create Routes](#step-5-create-routes)
+- [Step 6: Create Folder for Uploads](#step-6-create-folder-for-uploads)
+- [Step 7: Run Application](#step-7-run-application)
+- [Step 8: Upload Images/File using Postman](#step-8-upload-imagesfile-using-postman)
+- [Step 9: View Complete Code](#step-9-view-complete-code)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## ✅ Step 1: Install and Create Laravel Application
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+    composer create-project laravel/laravel laravel_api_file_upload_endpoint
+    cd laravel_api_file_upload_endpoint
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ✅ Step 2: Database Configuration using .env File
 
-### Premium Partners
+Open .env and configure your MySQL database:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=task_manager
+    DB_USERNAME=root
+    DB_PASSWORD=
 
-## Contributing
+## ✅ Step 3: Make Model and Migration File
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    php artisan make:model File -m
 
-## Code of Conduct
+then open the migration file and add code and run
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    php artisan migrate
 
-## Security Vulnerabilities
+Update the File model app/Models/File.php: 
+    
+    <?php
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    namespace App\Models;
 
-## License
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    class File extends Model
+    {
+        use HasFactory;
+
+        protected $fillable = ['file'];
+
+    }
+
+
+## ✅ Step 4: Make Controller
+
+     php artisan make:controller FileController
+
+and make the function  
+
+    public function fileUpload(Request $request) {
+        $fileObj = new File;
+
+        if($request->hasFile('file')) {
+            $filename = $request->file('file')->getClientOriginalName();
+            $getfilenamewitoutext = pathinfo($filename, PATHINFO_FILENAME);
+            $getfileExtension = $request->file('file')->getClientOriginalExtension();
+            $createnewFileName = time().'_'.str_replace(' ','_', $getfilenamewitoutext).'.'.$getfileExtension;
+            $img_path = $request->file('file')->storeAs('public/post_file', $createnewFileName);
+            $fileObj->file = $createnewFileName;
+        }
+
+        if($fileObj->save()) {
+            return ['status' => true, 'message' => "file uploded successfully"];
+        }
+        else {
+            return ['status' => false, 'message' => "Error : Image not uploded successfully"];
+
+        }
+    }
+    
+## ✅ Step 5: Create Routes
+
+    use App\http\controllers\FileController;
+
+    Route::post('fileupload', [FileController::class, 'fileUpload']);
+
+## ✅ Step 6: Create Folder for Uploads
+    php artisan storage:link
+Uploaded images will be stored in storage/app/public/uploads.
+
+## ✅ Step 7: Run Application
+    php artisan serve
+
+Server will run at: http://localhost:8000
+
+## ✅ Step 8: Upload Images/File using Postman
+
+- Method: POST
+
+- URL: http://localhost:8000/api/fileupload
+
+- Body Type: form-data
+
+    - Key → file
+
+    - image → Upload a JPG/PNG image
+
+Make sure to set the Content-Type to multipart/form-data in Postman.
+
+## 🛠 Tools & Technologies
+
+- [Laravel](https://laravel.com/)
+- [PHP](https://www.php.net/) 8.2 or higher
+- [Composer](https://getcomposer.org/)
+- [XAMPP](https://www.apachefriends.org/) / [MySQL](https://www.mysql.com/)
+- [Postman](https://www.postman.com/)
+
+---
+
+
+📂 Sample Folder Structure
+
+
+    app/
+    └── Http/
+        └── Controllers/
+            └── FileController.php
+
+    └── Models/
+        └── File.php
+
+    routes/
+    └── api.php
+
+
+    storage/
+    └── app/
+        └── public/
+            └── uploads/
